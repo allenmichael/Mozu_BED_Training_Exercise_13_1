@@ -47,25 +47,35 @@ namespace Mozu_BED_Training_Exercise_13_1
 
             //Now, create a Customer Contact resource
             var customerContactResource = new Mozu.Api.Resources.Commerce.Customer.Accounts.CustomerContactResource(_apiContext);
-
-            var customerContactCollection = customerContactResource.GetAccountContactsAsync(accountByEmail.Items[0].Id).Result;
-
-            foreach(var contact in customerContactCollection.Items)
+            var customerContactCollection = new Mozu.Api.Contracts.Customer.CustomerContactCollection();
+            if (accountByEmail.TotalCount > 0)
             {
-                System.Diagnostics.Debug.WriteLine("Name:");
-                System.Diagnostics.Debug.WriteLine(contact.FirstName);
-                System.Diagnostics.Debug.WriteLine(contact.MiddleNameOrInitial);
-                System.Diagnostics.Debug.WriteLine(contact.LastNameOrSurname);
-                System.Diagnostics.Debug.WriteLine("Address:");
-                System.Diagnostics.Debug.WriteLine(contact.Address.Address1);
-                System.Diagnostics.Debug.WriteLine(contact.Address.Address2);
-                System.Diagnostics.Debug.WriteLine(contact.Address.Address3);
-                System.Diagnostics.Debug.WriteLine(contact.Address.Address4);
-                System.Diagnostics.Debug.WriteLine(contact.Address.CityOrTown);
-                System.Diagnostics.Debug.WriteLine(contact.Address.StateOrProvince);
-                System.Diagnostics.Debug.WriteLine(contact.Address.PostalOrZipCode);
-                System.Diagnostics.Debug.WriteLine(contact.Address.CountryCode);
-                System.Diagnostics.Debug.WriteLine(String.Format("Is a validated address? {0}", contact.Address.IsValidated));
+                customerContactCollection = customerContactResource.GetAccountContactsAsync(accountByEmail.Items[0].Id).Result;
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("No contact information -- Customer does not exist");
+            }
+
+            if (customerContactCollection.TotalCount > 0)
+            {
+                foreach (var contact in customerContactCollection.Items)
+                {
+                    System.Diagnostics.Debug.WriteLine("Name:");
+                    System.Diagnostics.Debug.WriteLine(contact.FirstName);
+                    System.Diagnostics.Debug.WriteLine(contact.MiddleNameOrInitial);
+                    System.Diagnostics.Debug.WriteLine(contact.LastNameOrSurname);
+                    System.Diagnostics.Debug.WriteLine("Address:");
+                    System.Diagnostics.Debug.WriteLine(contact.Address.Address1);
+                    System.Diagnostics.Debug.WriteLine(contact.Address.Address2);
+                    System.Diagnostics.Debug.WriteLine(contact.Address.Address3);
+                    System.Diagnostics.Debug.WriteLine(contact.Address.Address4);
+                    System.Diagnostics.Debug.WriteLine(contact.Address.CityOrTown);
+                    System.Diagnostics.Debug.WriteLine(contact.Address.StateOrProvince);
+                    System.Diagnostics.Debug.WriteLine(contact.Address.PostalOrZipCode);
+                    System.Diagnostics.Debug.WriteLine(contact.Address.CountryCode);
+                    System.Diagnostics.Debug.WriteLine(String.Format("Is a validated address? {0}", contact.Address.IsValidated));
+                }
             }
 
             //Create a Customer Credit resource
